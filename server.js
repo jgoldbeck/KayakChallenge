@@ -3,6 +3,8 @@ var url = require("url");
 var querystring = require("querystring");
 var getcities = require("./getcities");
 
+var port = process.env.PORT || 3000;
+
 function start() {
   function onRequest(request, response) {
 
@@ -17,7 +19,7 @@ function start() {
     response.write("Hello World\n");
     response.end();
   }
-http.createServer(onRequest).listen(5000);
+http.createServer(onRequest).listen(port);
 console.log("Server has started.");
 }
 
