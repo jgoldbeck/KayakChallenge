@@ -13,7 +13,7 @@ var fromRequest = function (request, callback){ //primary function which calls t
   }
 
 var locationFromRequest = function (request, callback){
- var zip_code = querystring.parse(url.parse(request.url).query)["zip"];
+ var zip_code = querystring.parse(url.parse(request.url).query)["dest"];
  callback(zip_code);
 }
 
