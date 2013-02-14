@@ -4,36 +4,32 @@ var querystring = require("querystring");
 var requestor = require('request');
 
 
-function fromRequest (request, callback){
- var url_parts = url.parse(request.url);
- var query = url_parts.query;
- var queries = querystring.parse(query);
- var zip_code = queries["zip"]
- //FromZip(zip_code, callback);
+var zipFromRequest = function (request, callback){
+ var zip_code = querystring.parse(url.parse(request.url).query)["zip"];
  callback(zip_code);
 }
 
-var fromZip = function(zip_code, callback){
+var jsonFromZip = function(zip_code, callback){
   var options = {
     url: 'http://ws.geonames.org/postalCodeLookupJSON?postalcode=02139&country=US&username=ms_test201302',
     //json: true
   };
 
-requestor.get(options, function (err, response, body) {
-if (err){
-console.log("Got error: " + err.message);
-callback(err.message);
-} else {
-  callback(body);
+  requestor.get(options, function (err, response, body) {
+    if (err){
+      console.log("Got error: " + err.message);
+      callback(err.message);
+    } else {
+      callback(body);
+    }
+  });
 }
-});
-}
-// var FromJSON = function(geoJSON){
+var geoFromJSON = function(geoJSON){
 
 //   console.log('JSON: ' + geoJSON);
-// }
+}
 
 
 
-exports.fromRequest = fromRequest;
-exports.fromZip = fromZip;
+exports.zipFromRequest = zipFromRequest;
+exports.jsonFromZip = jsonFromZip;
