@@ -1,36 +1,39 @@
 var http = require("http");
 var url = require("url");
 var querystring = require("querystring");
+var requestor = require('request');
 
-function FromRequest (request){
+
+function fromRequest (request, callback){
  var url_parts = url.parse(request.url);
  var query = url_parts.query;
  var queries = querystring.parse(query);
  var zip_code = queries["zip"]
- FromZip(zip_code);
+ //FromZip(zip_code, callback);
+ callback(zip_code);
 }
 
-var FromZip = function(zip_code){
+var fromZip = function(zip_code, callback){
   var options = {
-    host: 'ws.geonames.org',
-    port: 80,
-    path: '/postalCodeLookupJSON?postalcode='+ zip_code + '&country=US&username=ms_test201302'
+    url: 'http://ws.geonames.org/postalCodeLookupJSON?postalcode=02139&country=US&username=ms_test201302',
+    //json: true
   };
 
-  http.get(options, function(res) {
-    console.log("Got response: " + res.statusCode);
-    console.log('HEADERS: ' + JSON.stringify(res.headers));
-
-    res.on('data', FromJSON
-      );
-  }).on('error', function(e) {console.log("Got error: " + e.message); });
+requestor.get(options, function (err, response, body) {
+if (err){
+console.log("Got error: " + err.message);
+callback(err.message);
+} else {
+  callback(body);
 }
-
-var FromJSON = function(geoJSON){
-
-  console.log('JSON: ' + geoJSON);
+});
 }
+// var FromJSON = function(geoJSON){
+
+//   console.log('JSON: ' + geoJSON);
+// }
 
 
 
-exports.FromRequest = FromRequest;
+exports.fromRequest = fromRequest;
+exports.fromZip = fromZip;

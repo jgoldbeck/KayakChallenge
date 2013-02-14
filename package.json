@@ -2,6 +2,9 @@
   "name": "kayak-challenge",
   "version": "0.3.0",
   "author": "JGoldbeck",
+  "dependencies": {
+    "request": "*"
+  },
   "engines": {
     "node": "0.8.x",
     "npm": "1.2.x"
