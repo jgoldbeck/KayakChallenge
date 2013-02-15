@@ -15,9 +15,10 @@ var fromRequest = function (request, callback) { //primary function which calls 
     };
     nearbyCitiesFromLocation(location_options, function(nearby_cities) {
         attachWeatherToCities(nearby_cities, function(weathered_cities) {
-            callback(weathered_cities);}
-            );
-
+            cartesianWeatheredCities(weathered_cities, function(city_day_array) {
+                callback(city_day_array);
+            });
+        });
     });
 };
 
@@ -55,13 +56,13 @@ requestor.get(geo_options, function (err, response, jsonbody) {
 });
 };
 
-var attachWeatherToCities = function(cities, callback) {
+var attachWeatherToCities = function(cities, callback) { // returns an object with cityname keys. useful intermediate format for various purposes.
     var weathered_cities = {};
     var wait = 0;
     cities.reverse(); // reverse cities so that duplicate city names will be overwritten by zip codes. it would be boring if user was directed to several zip codes within literally the same city
     async.each(cities, function(city,callback){
         wait += 50;
-        setTimeout(function() {attachWeatherToCity(city, function (weathered_city){
+        setTimeout(function() {attachWeatherToCity(city, function (weathered_city){ // space out requests for wxbug
             weathered_cities[weathered_city.placeName] = weathered_city;
             callback(); // doesn't do anything except help async keep track
             });
@@ -93,7 +94,7 @@ var attachWeatherToCity = function (city, callback) {
         } else {
             if (jsonweather.forecastList) {  //if forecast list correctly assigned (as opposed to qps overload)
               city.weather = jsonweather.forecastList;
-              console.log(city);
+              //console.log(city);
               callback(city);
           }
       else { // if qps overload or similar, just do it again (and again) until we get a defined forecastList
@@ -104,7 +105,26 @@ var attachWeatherToCity = function (city, callback) {
 });
 };
 
+var cartesianWeatheredCities = function(weathered_cities, callback) { // returns weather X days array
+    var city_day_array = [];
 
+    _.each(weathered_cities, function(weathered_city){
+        _.each(weathered_city.weather, function(days_weather){
+            var city_day = {};
+            _.extend(city_day, weathered_city); // add all info
+            city_day.weather = null; // make old weather info null
+            _.extend(city_day, days_weather); // add one day's weather info
+
+            console.log(city_day);
+
+            city_day_array.push(city_day);
+        }   );
+
+    }
+
+        );
+    callback(city_day_array);
+};
 
 
 
