@@ -62,13 +62,15 @@ var attachWeatherToCities = function(cities, callback) {
     async.each(cities, function(city,callback){
         wait += 500;  // need to delay because of api rate limit
         console.log(wait);
-        var thing = function(weathered_city){
+
+        setTimeout(function() {attachWeatherToCity(city, function(weathered_city){
 
             //console.log(weathered_cities);
-            callback(); // weathered_cities[city.location] = weathered_city;
+            callback();
+            // weathered_cities[city.location] = weathered_city;
 
-        };
-        setTimeout(function() {attachWeatherToCity(city, thing);}, wait);
+
+            );}, wait);
 
     },
     function(err){
