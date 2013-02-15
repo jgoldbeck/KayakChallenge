@@ -3,10 +3,12 @@
   "version": "0.3.0",
   "author": "JGoldbeck",
   "dependencies": {
-    "request": "*"
-  },
-  "engines": {
-    "node": "0.8.x",
-    "npm": "1.2.x"
+    "request": "2.12.0",
+    "underscore": "1.4.4",
+    "async": "0.2.5"
+    },
+    "engines": {
+      "node": "0.8.x",
+      "npm": "1.2.x"
+    }
   }
-}
