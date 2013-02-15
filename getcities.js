@@ -35,7 +35,7 @@ var nearbyCitiesFromLocation = function(location_options, callback){ //use geona
     _.defaults(location_options, { // set defaults
         location: '02139',
         radius: 30,
-        maxrows: 10
+        maxrows: 100
     });
 location_options.radius = Math.ceil(location_options.radius * 1.609); // convert from mi to km
 
