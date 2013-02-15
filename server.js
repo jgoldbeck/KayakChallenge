@@ -11,15 +11,13 @@ function start() {
 
     getcities.fromRequest(request, function(result) {
 
-          //console.log("Inspect result:" + util.inspect(result, true, null));
 
           var url_parts = url.parse(request.url);
           var pathname = url_parts.pathname;
           console.log("Request for " + pathname + " received.");
 
           response.writeHead(200, {"Content-Type": "text/plain"});
-          response.write("Hello World\n");
-          response.write("Result:" + util.inspect(result, true, null));
+          response.write("Result:" + result);
           response.end();
         });
   }

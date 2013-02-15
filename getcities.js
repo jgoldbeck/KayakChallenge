@@ -139,7 +139,7 @@ var topTenPretty = function (sorted_city_day_array, callback) { // get top ten p
     var topTen = sorted_city_day_array.slice(0,10);
     var topTenPretty = _.map(topTen, function(city_day){
 
-        return (city_day.placeName + ' will have a high of ' + city_day.high + ' degrees on ' + city_day.dayTitle);
+        return '\n' + city_day.placeName + ' will have a high of ' + city_day.high + ' degrees on ' + city_day.dayTitle;
     })
     callback(topTenPretty);
 //
