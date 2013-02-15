@@ -17,7 +17,7 @@ function start() {
           console.log("Request for " + pathname + " received.");
 
           response.writeHead(200, {"Content-Type": "text/plain"});
-          response.write("Result:" + result);
+          response.write("Result: " + result);
           response.end();
         });
   }

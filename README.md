@@ -1,7 +1,7 @@
 KayakChallenge v0.6.0
 ==============
 
-App for a MindSumo contest to take in a location and output the warmest 10 cities within 30 miles over the next 7 days along with the days those temperatures occurred on. Pretty simple, with kind of silly output, but lots of potential to expand and do cooler things.
+App for a MindSumo contest to take in a location within the US and output the warmest 10 cities within 30 miles over the next 7 days along with the days those temperatures occurred on. Pretty simple, with kind of silly output, but lots of potential to expand and do cooler things.
 
 Right now, the main function (getcities) is called using a url with a querystring containing 'dest=location' where 'location' can be a zip code or city name. An example of how to run the app from a browser (after starting with 'node web.js') is 'http://localhost:5000/test?dest=02139' . The path doesn't do anything yet, so 'test' is just a placeholder.
 

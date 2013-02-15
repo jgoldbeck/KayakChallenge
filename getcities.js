@@ -6,26 +6,10 @@ var _ = require('underscore');
 var async = require('async');
 
 var geonames_user = 'ms_test201302';
-var wxbug_api_key = 'fbzpn6ambx9de5nusf49rv4d';
+var wxbug_api_key = 'y62cjp5538tpjq5ymxe3z8wn';
 
-var fromRequest = function (request, callback) { //primary function which calls the various subfunctions in order
-    var location = locationFromRequest(request);
-    var location_options = {
-        location: location
-    };
-    nearbyCitiesFromLocation(location_options, function(nearby_cities) {
-        attachWeatherToCities(nearby_cities, function(weathered_cities) {
-            cartesianWeatheredCities(weathered_cities, function(city_day_array) {
-                sortCityDayArrayByHigh (city_day_array, function(sorted_city_day_array){
-                    topTenPretty (sorted_city_day_array, function(topTen){
+var fromRequest = function (request, getcities_callback) { //primary function which calls the various subfunctions in order
 
-                        callback(topTen);
-                    });
-                });
-            });
-        });
-    });
-};
 
 var locationFromRequest = function (request) { // extract location from url request querystring
     return querystring.parse(url.parse(request.url).query)["dest"];
@@ -55,8 +39,14 @@ requestor.get(geo_options, function (err, response, jsonbody) {
         console.log("Got error: " + err.message);
         callback(err.message);
     } else {
+        if (jsonbody.postalCodes) {
         nearbyCities = jsonbody.postalCodes;
         callback(nearbyCities);
+    }
+    else{
+
+        getcities_callback('Error: dest is in incorrect format. Should be zip or name with spaces or commas as necessary'); //function can now only be called in this scope.
+    }
     }
 });
 };
@@ -129,7 +119,7 @@ var sortCityDayArrayByHigh = function(city_day_array, callback) { // sort by hig
         if (city_day.high){
             return -(parseInt(city_day.high, 10)); // sort by descending high temperatures
         } else {
-            return -9999999; //null values should be at bottom of list
+            return 9999999; //null values should be at bottom of list
         }
     });
     callback(sorted_city_day_array);
@@ -145,5 +135,22 @@ var topTenPretty = function (sorted_city_day_array, callback) { // get top ten p
 //
 };
 
+    var location = locationFromRequest(request);
+    var location_options = {
+        location: location
+    };
+    nearbyCitiesFromLocation(location_options, function(nearby_cities) {
+        attachWeatherToCities(nearby_cities, function(weathered_cities) {
+            cartesianWeatheredCities(weathered_cities, function(city_day_array) {
+                sortCityDayArrayByHigh (city_day_array, function(sorted_city_day_array){
+                    topTenPretty (sorted_city_day_array, function(topTen){
+
+                        getcities_callback(topTen);
+                    });
+                });
+            });
+        });
+    });
+};
 
 exports.fromRequest  = fromRequest;
