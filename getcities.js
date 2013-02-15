@@ -16,7 +16,9 @@ var fromRequest = function (request, callback) { //primary function which calls 
     nearbyCitiesFromLocation(location_options, function(nearby_cities) {
         attachWeatherToCities(nearby_cities, function(weathered_cities) {
             cartesianWeatheredCities(weathered_cities, function(city_day_array) {
-                callback(city_day_array);
+                sortCityDayArrayByHigh (city_day_array, function(sorted_city_day_array){
+                    callback(sorted_city_day_array);
+                });
             });
         });
     });
@@ -65,8 +67,8 @@ var attachWeatherToCities = function(cities, callback) { // returns an object wi
         setTimeout(function() {attachWeatherToCity(city, function (weathered_city){ // space out requests for wxbug
             weathered_cities[weathered_city.placeName] = weathered_city;
             callback(); // doesn't do anything except help async keep track
-            });
-        }, wait);
+        });
+    }, wait);
     },
     function(err){
         if (err) {
@@ -105,27 +107,32 @@ var attachWeatherToCity = function (city, callback) {
 });
 };
 
-var cartesianWeatheredCities = function(weathered_cities, callback) { // returns weather X days array
+var cartesianWeatheredCities = function(weathered_cities, callback) { // returns city X days (1-D) array
     var city_day_array = [];
-
     _.each(weathered_cities, function(weathered_city){
         _.each(weathered_city.weather, function(days_weather){
             var city_day = {};
             _.extend(city_day, weathered_city); // add all info
             city_day.weather = null; // make old weather info null
             _.extend(city_day, days_weather); // add one day's weather info
-
-            console.log(city_day);
-
             city_day_array.push(city_day);
-        }   );
-
-    }
-
-        );
+        });
+    });
     callback(city_day_array);
 };
 
+var sortCityDayArrayByHigh = function(city_day_array, callback){
+    sorted_city_day_array = _.sortBy(city_day_array, function(city_day){
+        console.log(city_day)
+        if (city_day.high){
+            return -parseInt(city_day.high); // sort by descending high temperatures
+        } else {
+            return -9999999; //null values should be at bottom of list
+
+        }
+    });
+    callback(sorted_city_day_array);
+};
 
 
 exports.fromRequest  = fromRequest;
