@@ -56,9 +56,10 @@ requestor.get(geo_options, function (err, response, jsonbody) {
 };
 
 var attachWeatherToCities = function(cities, callback) {
-weathered_cities = cities.reverse();
-    async.each(cities.reverse(), function(city,callback){  // reverse cities so that duplicate city names will be overwritten by zip codes
-        //                                                                               // it would be boring if user was directed to several zip codes within literally the same city
+    var weathered_cities = cities;
+    cities.reverse(); // reverse cities so that duplicate city names will be overwritten by zip codes. it would be boring if user was directed to several zip codes within literally the same city
+    async.each(cities, function(city,callback){
+        //
         callback();
     },
     function(err){
