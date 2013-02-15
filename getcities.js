@@ -17,18 +17,21 @@ var fromRequest = function (request, callback) { //primary function which calls 
         attachWeatherToCities(nearby_cities, function(weathered_cities) {
             cartesianWeatheredCities(weathered_cities, function(city_day_array) {
                 sortCityDayArrayByHigh (city_day_array, function(sorted_city_day_array){
-                    callback(sorted_city_day_array);
+                    topTenPretty (sorted_city_day_array, function(topTen){
+
+                        callback(topTen);
+                    });
                 });
             });
         });
     });
 };
 
-var locationFromRequest = function (request) {
+var locationFromRequest = function (request) { // extract location from url request querystring
     return querystring.parse(url.parse(request.url).query)["dest"];
 };
 
-var nearbyCitiesFromLocation = function(location_options, callback){
+var nearbyCitiesFromLocation = function(location_options, callback){ //use geonames to find nearby cities
     _.defaults(location_options, { // set defaults
         location: '02139',
         radius: 30,
@@ -40,7 +43,7 @@ var geo_options = { //options for calling geonames service
     url: 'http://ws.geonames.org/findNearbyPostalCodesJSON?placename=' + location_options.location +
     '&radius=' + location_options.radius +
     '&maxRows=' + location_options.maxrows +
-    '&style=short' +
+    '&style=short&country=US' +
     '&username=' + geonames_user,
     json: true,
     encoding: 'utf8'
@@ -81,7 +84,7 @@ var attachWeatherToCities = function(cities, callback) { // returns an object wi
 
 } ;
 
-var attachWeatherToCity = function (city, callback) {
+var attachWeatherToCity = function (city, callback) { // use wxbug to add weather to city objects
 
     zip_code=(city.postalCode);
     var wxbug_options = { // options for calling weatherbug service
@@ -121,17 +124,25 @@ var cartesianWeatheredCities = function(weathered_cities, callback) { // returns
     callback(city_day_array);
 };
 
-var sortCityDayArrayByHigh = function(city_day_array, callback){
+var sortCityDayArrayByHigh = function(city_day_array, callback) { // sort by high
     sorted_city_day_array = _.sortBy(city_day_array, function(city_day){
-        console.log(city_day)
         if (city_day.high){
-            return -parseInt(city_day.high); // sort by descending high temperatures
+            return -(parseInt(city_day.high, 10)); // sort by descending high temperatures
         } else {
             return -9999999; //null values should be at bottom of list
-
         }
     });
     callback(sorted_city_day_array);
+};
+
+var topTenPretty = function (sorted_city_day_array, callback) { // get top ten places and clean up the output
+    var topTen = sorted_city_day_array.slice(0,10);
+    var topTenPretty = _.map(topTen, function(city_day){
+
+        return (city_day.placeName + ' will have a high of ' + city_day.high + ' degrees on ' + city_day.dayTitle);
+    })
+    callback(topTenPretty);
+//
 };
 
 
