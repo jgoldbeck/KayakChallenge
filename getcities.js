@@ -14,11 +14,11 @@ var fromRequest = function (request, callback) { //primary function which calls 
         location: location
     };
     nearbyCitiesFromLocation(location_options, function(nearby_cities) {
-    attachWeatherToCities(nearby_cities, function(weathered_cities) {
-    callback(weathered_cities);}
-    );
+        attachWeatherToCities(nearby_cities, function(weathered_cities) {
+            callback(weathered_cities);}
+            );
 
-});
+    });
 };
 
 var locationFromRequest = function (request) {
@@ -29,7 +29,7 @@ var nearbyCitiesFromLocation = function(location_options, callback){
     _.defaults(location_options, { // set defaults
         location: '02139',
         radius: 30,
-        maxrows: 100
+        maxrows: 10
     });
 location_options.radius = Math.ceil(location_options.radius * 1.609); // convert from mi to km
 
@@ -57,28 +57,22 @@ requestor.get(geo_options, function (err, response, jsonbody) {
 
 var attachWeatherToCities = function(cities, callback) {
     var weathered_cities = {};
-    cities.reverse(); // reverse cities so that duplicate city names will be overwritten by zip codes. it would be boring if user was directed to several zip codes within literally the same city
     var wait = 0;
+    cities.reverse(); // reverse cities so that duplicate city names will be overwritten by zip codes. it would be boring if user was directed to several zip codes within literally the same city
     async.each(cities, function(city,callback){
-        wait += 500;  // need to delay because of api rate limit
-        console.log(wait);
-
-        setTimeout(function() {attachWeatherToCity(city, function(weathered_city){
-
-            //console.log(weathered_cities);
-            callback();
-            // weathered_cities[city.location] = weathered_city;
-
-
-            );}, wait);
-
+        wait += 50;
+        setTimeout(function() {attachWeatherToCity(city, function (weathered_city){
+            weathered_cities[weathered_city.placeName] = weathered_city;
+            callback(); // doesn't do anything except help async keep track
+            });
+        }, wait);
     },
     function(err){
         if (err) {
             console.log("Got error: " + err.message);
-            callback(err.message);}
-        else {
-            callback(weathered_cities);
+            callback(err.message);} // err callback
+            else {
+            callback(weathered_cities); // this is the 'real' callback
         }
     });
 
@@ -95,14 +89,19 @@ var attachWeatherToCity = function (city, callback) {
     requestor.get(wxbug_options, function (err, response, jsonweather) { //attach weather to the city object
         if (err){
             console.log("Got error: " + err.message);
-            callback(err.message); // check is response is 200?????
+            callback(err.message);
         } else {
-          city.weather = jsonweather.forecastList;
-          console.log(city);
-          callback(city);
-      }
+            if (jsonweather.forecastList) {  //if forecast list correctly assigned (as opposed to qps overload)
+              city.weather = jsonweather.forecastList;
+              console.log(city);
+              callback(city);
+          }
+      else { // if qps overload or similar, just do it again (and again) until we get a defined forecastList
+        setTimeout(function() {attachWeatherToCity(city, callback);}, Math.random()*40+10); // wait 10-50 ms between requests, random to stagger requests from callbacks
+    }
+}
 
-  });
+});
 };
 
 
