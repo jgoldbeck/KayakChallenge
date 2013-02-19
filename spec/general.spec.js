@@ -8,7 +8,7 @@ describe('nearby warm weather', function(){
         timeout: timeout
     };
 
-    it("should respond with non-null weather and city info", function(done) { // this should probably be several specs, but I'm not sure how to do that with one browser request
+    it("should respond with non-null weather and city info in correct format", function(done) { // this should probably be several specs, but I'm not sure how to do that with one browser request
         requestor.get(browser_options, function (err, response, body) {
             expect(response.statusCode).toEqual(200);
             expect(body).toMatch(/(.*) will have a high of \d+ degrees on (.*)/);
