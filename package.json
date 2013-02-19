@@ -1,15 +1,15 @@
 {
-  "name": "kayak-challenge",
-  "version": "0.6.0",
-  "author": "JGoldbeck",
-  "dependencies": {
-    "request": "2.12.0",
-    "underscore": "1.4.4",
-    "async": "0.2.5",
-    "jasmine-node": "latest"
-    },
+    "name": "kayak-challenge",
+    "version": "0.6.0",
+    "author": "JGoldbeck",
+    "dependencies": {
+        "request": "2.12.0",
+        "underscore": "1.4.4",
+        "async": "0.2.5",
+        "jasmine-node": "latest"
+        },
     "engines": {
-      "node": "0.8.x",
-      "npm": "1.2.x"
-    }
+        "node": "0.8.x",
+        "npm": "1.2.x"
+      }
   }
