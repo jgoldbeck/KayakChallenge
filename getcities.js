@@ -19,19 +19,19 @@ var nearbyCitiesFromLocation = function(location_options, callback){ //use geona
     _.defaults(location_options, { // set defaults
         location: '02139',
         radius: 30,
-        maxrows: 40
+        maxrows: 20
     });
 location_options.radius = Math.ceil(location_options.radius * 1.609); // convert from mi to km
 
-var geo_options = { //options for calling geonames service
-    url: 'http://ws.geonames.org/findNearbyPostalCodesJSON?placename=' + location_options.location +
-    '&radius=' + location_options.radius +
-    '&maxRows=' + location_options.maxrows +
-    '&style=short&country=US' +
-    '&username=' + geonames_user,
-    json: true,
-    encoding: 'utf8'
-};
+    var geo_options = { //options for calling geonames service
+        url: 'http://ws.geonames.org/findNearbyPostalCodesJSON?placename=' + location_options.location +
+        '&radius=' + location_options.radius +
+        '&maxRows=' + location_options.maxrows +
+        '&style=short&country=US' +
+        '&username=' + geonames_user,
+        json: true,
+        encoding: 'utf8'
+    };
 
 //get postal codes
 requestor.get(geo_options, function (err, response, jsonbody) {
@@ -40,14 +40,14 @@ requestor.get(geo_options, function (err, response, jsonbody) {
         callback(err.message);
     } else {
         if (jsonbody.postalCodes) {
-        nearbyCities = jsonbody.postalCodes;
-        callback(nearbyCities);
-    }
-    else{
+            nearbyCities = jsonbody.postalCodes;
+            callback(nearbyCities);
+        }
+        else{
 
         getcities_callback('Error: dest is in incorrect format. Should be zip or name with spaces or commas as necessary'); //function can now only be called in this scope.
     }
-    }
+}
 });
 };
 
@@ -130,27 +130,27 @@ var topTenPretty = function (sorted_city_day_array, callback) { // get top ten p
     var topTenPretty = _.map(topTen, function(city_day){
 
         return '\n' + city_day.placeName + ' will have a high of ' + city_day.high + ' degrees on ' + city_day.dayTitle;
-    })
+    });
     callback(topTenPretty);
 //
 };
 
-    var location = locationFromRequest(request);
-    var location_options = {
-        location: location
-    };
-    nearbyCitiesFromLocation(location_options, function(nearby_cities) {
-        attachWeatherToCities(nearby_cities, function(weathered_cities) {
-            cartesianWeatheredCities(weathered_cities, function(city_day_array) {
-                sortCityDayArrayByHigh (city_day_array, function(sorted_city_day_array){
-                    topTenPretty (sorted_city_day_array, function(topTen){
+var location = locationFromRequest(request);
+var location_options = {
+    location: location
+};
+nearbyCitiesFromLocation(location_options, function(nearby_cities) {
+    attachWeatherToCities(nearby_cities, function(weathered_cities) {
+        cartesianWeatheredCities(weathered_cities, function(city_day_array) {
+            sortCityDayArrayByHigh (city_day_array, function(sorted_city_day_array){
+                topTenPretty (sorted_city_day_array, function(topTen){
 
-                        getcities_callback(topTen);
-                    });
+                    getcities_callback(topTen);
                 });
             });
         });
     });
+});
 };
 
 exports.fromRequest  = fromRequest;
