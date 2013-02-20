@@ -2,7 +2,7 @@ var http = require("http");
 var url = require("url");
 var util = require("util");
 var querystring = require("querystring");
-var getcities = require("./getcities");
+var getcities = require("./app/getcities");
 
 var port = process.env.PORT || 5000;
 
