@@ -1,9 +1,5 @@
-var http = require("http");
 var url = require("url");
 var querystring = require("querystring");
-var requestor = require('request');
-var _ = require('underscore');
-var async = require('async');
 var cities = require("./cities");
 var weather = require("./weather");
 
@@ -15,12 +11,14 @@ var fromRequest = function (request, getcities_callback) { //primary function wh
 
     var location = locationFromRequest(request);
     var location_options = {
-        location: location
+        location: location,
+        radius: 30,
+        maxrows: 20
     };
 
     cities.nearLocation(location_options, function(nearby_cities) {
         weather.topTenHighsText(nearby_cities, function(topTen) {
-                        getcities_callback(topTen);
+            getcities_callback(topTen);
         });
     });
 };

@@ -5,7 +5,7 @@ var geonames_user = 'ms_test201302';
 
 var nearLocation = function(location_options, callback){ //use geonames to find nearby cities
         _.defaults(location_options, { // set defaults
-            location: '94103',
+            location: '02139',
             radius: 30,
             maxrows: 20
         });
@@ -34,9 +34,9 @@ var nearLocation = function(location_options, callback){ //use geonames to find 
             else{
 
             getcities_callback('Error: dest may be in incorrect format. Should be zip or name with spaces or commas as necessary\n Response:' + jsonbody.status.message); //function can now only be called in this scope.
+            }
         }
-    }
     });
-    };
+};
 
 exports.nearLocation  = nearLocation;
