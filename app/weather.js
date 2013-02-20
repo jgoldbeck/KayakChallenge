@@ -53,9 +53,9 @@ var attachToCity = function (city, callback) { // use wxbug to add weather to ci
     });
 };
 
-var cartesianWeatheredCities = function(weathered_cities) { // returns city X days (1-D) array
+var cartesianWeatheredCities = function(weathered_cities, callback) { // returns city X days (1-D) array
     var city_day_array = [];
-    weathered_cities.forEach(function(weathered_city){
+    _.each(weathered_cities, function(weathered_city){
         weathered_city.weather.forEach(function(days_weather){
             var city_day = {};
                 _.extend(city_day, weathered_city); // add all info
@@ -64,7 +64,7 @@ var cartesianWeatheredCities = function(weathered_cities) { // returns city X da
                 city_day_array.push(city_day);
             });
     });
-    return(city_day_array);
+    callback(city_day_array);
 };
 
 var sortCityDayArrayByHigh = function(city_day_array) { // sort by high
@@ -90,12 +90,13 @@ var topTenText = function (sorted_city_day_array) { // get top ten places and cl
 var topTenHighsText = function (cities, callback) {
 
     attachToCities(cities, function(weathered_cities) {
-        var city_day_array =cartesianWeatheredCities(weathered_cities);
+        cartesianWeatheredCities(weathered_cities, function(city_day_array){
+            var sorted_city_day_array = sortCityDayArrayByHigh (city_day_array);
+            var topTen = topTenText (sorted_city_day_array);
+            callback(topTen);
+});
     });
-    var sorted_city_day_array = sortCityDayArrayByHigh (city_day_array);
-    var topTen = topTenText (sorted_city_day_array);
 
-    callback(topTen);
 
 };
 
