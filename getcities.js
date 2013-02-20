@@ -5,7 +5,7 @@ var requestor = require('request');
 var _ = require('underscore');
 var async = require('async');
 
-var geonames_user = 'goldbeck'; //ms_test201302 also server should be ws.geonames.org
+var geonames_user = 'ms_test201302';
 var wxbug_api_key = 'y62cjp5538tpjq5ymxe3z8wn';
 
 var fromRequest = function (request, getcities_callback) { //primary function which calls the various subfunctions in order
@@ -17,13 +17,13 @@ var fromRequest = function (request, getcities_callback) { //primary function wh
     var nearbyCitiesFromLocation = function(location_options, callback){ //use geonames to find nearby cities
         _.defaults(location_options, { // set defaults
             location: '94103',
-            radius: 18,
+            radius: 30,
             maxrows: 20
         });
     location_options.radius = Math.ceil(location_options.radius * 1.609); // convert from mi to km
 
         var geo_options = { //options for calling geonames service
-            url: 'http://api.geonames.org/findNearbyPostalCodesJSON?placename=' + location_options.location +
+            url: 'http://ws.geonames.org/findNearbyPostalCodesJSON?placename=' + location_options.location +
             '&radius=' + location_options.radius +
             '&maxRows=' + location_options.maxrows +
             '&style=short&country=US' +
@@ -55,7 +55,7 @@ var fromRequest = function (request, getcities_callback) { //primary function wh
         var wait = 0;
         cities.reverse(); // reverse cities so that duplicate city names will be overwritten by zip codes. it would be boring if user was directed to several zip codes within literally the same city
         async.each(cities, function(city,callback){
-            wait += 525; // rate limit is nominally 500 ms/request
+            wait += 200; // rate limit is nominally 500 ms/request
             setTimeout(function() {attachWeatherToCity(city, function (weathered_city){ // space out requests for wxbug
                 weathered_cities[weathered_city.placeName] = weathered_city;
                 callback(); // doesn't do anything except help async keep track
@@ -91,7 +91,7 @@ var fromRequest = function (request, getcities_callback) { //primary function wh
                   //console.log(city);
                   callback(city);}
                 else { // if qps overload or similar, just do it again (and again) until we get a defined forecastList
-                    console.log('Had to retry for wxbug likely due to rate limit');
+                //console.log('Had to retry for wxbug likely due to rate limit');
                 setTimeout(function() {attachWeatherToCity(city, callback);}, Math.random()*40+10);// wait 10-50 ms between requests, random to stagger requests from callbacks
                 }
             }

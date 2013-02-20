@@ -5,7 +5,7 @@ var port = process.env.PORT || 5000;
 describe('nearby warm weather', function(){
 
     var browser_options = {
-        url: 'http://localhost:' + port + '/test?zip=02139',
+        url: 'http://localhost:' + port + '/test?dest=02139',
         timeout: timeout
     };
 
