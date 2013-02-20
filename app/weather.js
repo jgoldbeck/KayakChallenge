@@ -75,14 +75,25 @@ function cartesianWeatheredCities (weathered_cities, callback) { // returns city
 }
 
 function sortCityDayArrayByHigh (city_day_array) { // sort by high
-    sorted_city_day_array = city_day_array.sort(function(city_day){
-        if (city_day.high){
-            return -(parseInt(city_day.high, 10));} // sort by descending high temperatures
-        else {
-            return 9999999; //null values should be at bottom of list
+    city_day_array.sort(function(city_day_a, city_day_b){
+        if (!city_day_a && !city_day_b){ // if both are null
+            return 0; // order not important
         }
+        if (!city_day_a){ // if city_day_a is null
+            return 1; // a should be at end
+        }
+        if (!city_day_b){ // if city_day_a is null
+            return -1; // b should be at end
+        }
+        if (city_day_a.high > city_day_b.high){
+            return -1;} // high temperatures should come early
+        if (city_day_a.high < city_day_b.high){
+            return 1;} // low temperatures should come later
+        else{
+            return 0;
+            }
     });
-    return(sorted_city_day_array);
+    return(city_day_array);
 }
 
 function topTenText  (sorted_city_day_array) { // get top ten places and clean up the output
