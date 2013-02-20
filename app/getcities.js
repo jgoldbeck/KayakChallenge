@@ -16,10 +16,15 @@ var fromRequest = function (request, getcities_callback) { //primary function wh
         maxrows: 20
     };
 
-    cities.nearLocation(location_options, function(nearby_cities) {
-        weather.topTenHighsText(nearby_cities, function(topTen) {
+    cities.nearLocation(location_options, function(err, nearby_cities_result) {
+        if (err){
+            getcities_callback(nearby_cities_result); // an error message
+        }
+        else{
+        weather.topTenHighsText(nearby_cities_result, function(topTen) {
             getcities_callback(topTen);
         });
+    }
     });
 };
 

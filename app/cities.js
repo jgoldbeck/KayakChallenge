@@ -25,15 +25,14 @@ var nearLocation = function(location_options, callback){ //use geonames to find 
     requestor.get(geo_options, function (err, response, jsonbody) {
         if (err){
             console.log("Got error: " + err.message);
-            callback(err.message);}
+            callback(true, err.message);}
         else {
             if (jsonbody.postalCodes) {
                 nearbyCities = jsonbody.postalCodes;
-                callback(nearbyCities);
+                callback(null, nearbyCities);
             }
             else{
-
-            getcities_callback('Error: dest may be in incorrect format. Should be zip or name with spaces or commas as necessary\n Response:' + jsonbody.status.message); //function can now only be called in this scope.
+                callback(true, 'Error: dest may be in incorrect format. Should be zip or name with spaces or commas as necessary\n Response:' + jsonbody.status.message); //function can now only be called in this scope.
             }
         }
     });
