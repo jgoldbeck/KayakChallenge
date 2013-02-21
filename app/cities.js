@@ -3,6 +3,10 @@ var _ = require('underscore');
 
 var geonames_user = 'ms_test201302';
 
+
+// input: US city or zip code (i.e. Cambridge, MA; Cambridge; Cambridge MA; 02139)
+// output: array of nearby city objects. for example [{distance: 0, postalCode: '02139', countryCode: 'US',
+//                                                                                     lng: -71.104155, placeName: 'Cambridge', lat: 42.364688 }]
 var nearLocation = function(location_options, callback){ //use geonames to find nearby cities
         _.defaults(location_options, { // set defaults
             location: '02139',
@@ -28,7 +32,10 @@ var nearLocation = function(location_options, callback){ //use geonames to find 
             callback(true, err.message);}
         else {
             if (jsonbody.postalCodes) {
-                nearbyCities = jsonbody.postalCodes;
+                nearbyCities = jsonbody.postalCodes.map(function(city){
+                    city.distance = parseFloat(city.distance);
+                    return city;
+                });
                 callback(null, nearbyCities);
             }
             else{

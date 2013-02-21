@@ -1,4 +1,5 @@
 var url = require("url");
+var util = require("util");
 var querystring = require("querystring");
 var cities = require("./cities");
 var weather = require("./weather");

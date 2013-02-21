@@ -4,10 +4,14 @@ var async = require('async');
 
 var wxbug_api_key = 'y62cjp5538tpjq5ymxe3z8wn';
 
-// input is cities object from cities.js. outputs text showing the top 10 highs over the next 7 days in the input cities
+// input: array of cities from cities.js for example, an array of one city: [{distance: 0, postalCode: '02139',
+//                                                                                                                    countryCode: 'US', lng: -71.104155,
+//                                                                                                                    placeName: 'Cambridge', lat: 42.364688 }]
+// output: text indicating the top 10 highs over the next 7 days across the input cities
+//               an example of one line: 'Cambridge will have a high of 45 degrees on Tuesday,'
 var topTenHighsText = function (cities, callback) {
     attachToCities(cities, function(weathered_cities) {
-        cartesianWeatheredCities(weathered_cities, function(city_day_array){
+        cartesianWeatheredCities (weathered_cities, function(city_day_array){
             callback (topTenText (sortCityDayArrayByHigh (city_day_array)));
         });
     });
@@ -74,7 +78,7 @@ function cartesianWeatheredCities (weathered_cities, callback) { // returns city
     callback(city_day_array);
 }
 
-function sortCityDayArrayByHigh (city_day_array) { // sort by high
+function sortCityDayArrayByHigh (city_day_array) { // sort by high, descending
     city_day_array.sort(function(city_day_a, city_day_b){
         if (!city_day_a && !city_day_b){ // if both are null
             return 0; // order not important
@@ -91,9 +95,9 @@ function sortCityDayArrayByHigh (city_day_array) { // sort by high
             return 1;} // low temperatures should come later
         else{
             return 0;
-            }
+        }
     });
-    return(city_day_array);
+    return (city_day_array);
 }
 
 function topTenText  (sorted_city_day_array) { // get top ten places and clean up the output
@@ -101,7 +105,7 @@ function topTenText  (sorted_city_day_array) { // get top ten places and clean u
     var topTenTextOut = topTen.map(function(city_day){
         return '\n' + city_day.placeName + ' will have a high of ' + city_day.high + ' degrees on ' + city_day.dayTitle;
     });
-    return(topTenTextOut);
+    return (topTenTextOut);
 }
 
 
