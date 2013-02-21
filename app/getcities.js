@@ -14,7 +14,8 @@ var fromRequest = function (request, getcities_callback) { //primary function wh
     var location_options = {
         location: location,
         radius: 30,
-        maxrows: 20
+        num_cities: 20,
+        remove_duplicates: true
     };
 
     cities.nearLocation(location_options, function(err, nearby_cities_result) {

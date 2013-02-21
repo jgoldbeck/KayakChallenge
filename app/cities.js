@@ -11,14 +11,20 @@ var nearLocation = function(location_options, callback){ //use geonames to find 
         _.defaults(location_options, { // set defaults
             location: '02139',
             radius: 30,
-            maxrows: 20
+            num_cities: 20,
+            remove_duplicates: true // remove multiple city entries with same location name (but different postal codes)
         });
-    location_options.radius = Math.ceil(location_options.radius * 1.609); // convert from mi to km
+        location_options.radius = Math.ceil(location_options.radius * 1.609); // convert from mi to km
+
+        if (location_options.remove_duplicates){
+            max_rows = location_options.num_cities * 20;} // need extra cities to remove dups later
+        else{
+            max_rows = location_options.num_cities;}
 
         var geo_options = { //options for calling geonames service
             url: 'http://ws.geonames.org/findNearbyPostalCodesJSON?placename=' + location_options.location +
             '&radius=' + location_options.radius +
-            '&maxRows=' + location_options.maxrows +
+            '&maxRows=' + max_rows +
             '&style=short&country=US' +
             '&username=' + geonames_user,
             json: true,
@@ -31,12 +37,28 @@ var nearLocation = function(location_options, callback){ //use geonames to find 
             console.log("Got error: " + err.message);
             callback(true, err.message);}
         else {
-            if (jsonbody.postalCodes) {
-                nearbyCities = jsonbody.postalCodes.map(function(city){
+            if (jsonbody.postalCodes) { // get nearby_cities from json
+                nearby_cities = jsonbody.postalCodes.map(function(city){
                     city.distance = parseFloat(city.distance);
                     return city;
                 });
-                callback(null, nearbyCities);
+
+                if (location_options.remove_duplicates){ // remove duplicates if set in options
+                    var included_cities = [];
+                    var nearby_cities_no_dups = [];
+                    var cities_list = [];
+                    nearby_cities.forEach(function(city){
+                        if (cities_list.indexOf(city.placeName)==-1){ // if not already in array
+                                cities_list.push(city.placeName); // add to list
+                                nearby_cities_no_dups.push(city); //add to array
+                            }
+                    });
+                    nearby_cities = nearby_cities_no_dups;
+                }
+
+                nearby_cities = nearby_cities.slice(0, location_options.num_cities); // shorten cities array to proper output length
+
+                callback(null, nearby_cities);
             }
             else{
                 callback(true, 'Error: dest may be in incorrect format. Should be zip or name with spaces or commas as necessary\n Response:' + jsonbody.status.message); //function can now only be called in this scope.
