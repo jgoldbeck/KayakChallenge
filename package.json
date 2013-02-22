@@ -1,6 +1,6 @@
 {
     "name": "kayak-challenge",
-    "version": "0.6.0",
+    "version": "0.6.5",
     "author": "JGoldbeck",
     "dependencies": {
         "request": "2.12.0",

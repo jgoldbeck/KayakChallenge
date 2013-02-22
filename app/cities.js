@@ -16,6 +16,7 @@ var nearLocation = function(location_options, callback){ //use geonames to find 
         });
         location_options.radius = Math.ceil(location_options.radius * 1.609); // convert from mi to km
 
+        // set max_rows parameter for geonames api call
         if (location_options.remove_duplicates){
             max_rows = location_options.num_cities * 20;} // need extra cities to remove dups later
         else{
