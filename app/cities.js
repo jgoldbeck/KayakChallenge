@@ -18,7 +18,7 @@ var nearLocation = function(location_options, callback){ //use geonames to find 
 
         // set max_rows parameter for geonames api call
         if (location_options.remove_duplicates){
-            max_rows = location_options.num_cities * 20;} // need extra cities to remove dups later
+            max_rows = Math.min(location_options.num_cities * 20, 2500);} // need extra cities to remove dups later; max per api call is 2500
         else{
             max_rows = location_options.num_cities;}
 
