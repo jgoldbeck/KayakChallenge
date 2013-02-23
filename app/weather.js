@@ -103,9 +103,9 @@ function sortCityDayArrayByHigh (city_day_array) { // sort by high, descending
 function topTenText  (sorted_city_day_array) { // get top ten places and clean up the output
     var topTen = sorted_city_day_array.slice(0,10);
     var topTenTextOut = topTen.map(function(city_day){
-        return '\n' + city_day.placeName + ' will have a high of ' + city_day.high + ' degrees on ' + city_day.dayTitle;
+        return '\n<li>' + city_day.placeName + ' will have a high of ' + city_day.high + ' degrees on ' + city_day.dayTitle + '</li>';
     });
-    return ('Top Ten Nearby Highs:\n' + topTenTextOut);
+    return ('Top Ten Nearby Highs:\n<br><ul>' + topTenTextOut.join('')+'</ul>');
 }
 
 

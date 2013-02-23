@@ -15,8 +15,8 @@ function start() {
             var pathname = url_parts.pathname;
             console.log("Request for " + pathname + " received.");
 
-            response.writeHead(200);
-            response.write(reply);
+            response.writeHead(200, {'Content-Type': 'text/html'});
+            response.write('<body>\n' + reply + '\n</body>');
             response.end();
         });
     }
