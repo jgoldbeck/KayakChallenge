@@ -1,14 +1,12 @@
-KayakChallenge v0.6.5
+KayakChallenge v1.0.0
 ==============
 
 App for a MindSumo contest to take in a location within the US and output the warmest 10 cities within 30 miles over the next 7 days along with the days those temperatures occurred on. Pretty simple, with kind of silly output, but lots of potential to expand and do cooler things.
 
-Right now, the main function (getcities) is called using a url with a querystring containing 'dest=location' where 'location' can be a zip code or city name. An example of how to run the app from a browser (after starting with 'node web.js') is 'http://localhost:5000/test?dest=02139' . The path doesn't do anything yet, so 'test' is just a placeholder.
-
-Implemented with node.js because I wanted to learn it. Also, node could have made the app blazingly fast, but the Geonames API is only accepting a request every ~500 ms. Therefore, the app is *slow* unless you use a better api key or switch services.
+The front end is a form in which the user enters a zip code or city name, followed by some text output listing the top ten nearby highs. Currently, only 20 nearby cities are considered to find the highs because the WeatherBug API only accepts a request every ~500 ms. Therefore, the app is *slow* unless you use a better api key or switch services.
 
 You can interact with the app at http://kayakchallenge.herokuapp.com . It may take some time to load, due to the rate-limited APIs it uses.
 
-If you like it warm, http://kayakchallenge.herokuapp.com/whynotgoto?dest=Austin
+Implemented with node.js because I wanted to learn it.
 
-Authored by jgoldbeck. Version 0.6.0 February 15, 2013
+Authored by jgoldbeck. Version 1.0.0 February 22, 2013
