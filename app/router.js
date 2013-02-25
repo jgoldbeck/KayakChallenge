@@ -7,7 +7,7 @@ var reply = function (request, response_callback) { //primary function which cal
 
     var parsed_url = url.parse(request.url, parseQueryString = true);
 
-    if (parsed_url.query.dest) { // if destination is input, then find nearby highs and return results
+    if (parsed_url.query.dest) { // if destination is input, then find nearby preferred weather and return results
 
         var location_options = {
             location: parsed_url.query.dest,
@@ -20,11 +20,13 @@ var reply = function (request, response_callback) { //primary function which cal
             if (err){
             response_callback(nearby_cities_result);} // an error message
             else{
-                if (parsed_url.query.wxsort){
+
+                if (parsed_url.query.wxsort){ // find nearby maximal desired weather properties as indicated by wxsort
                     weather.topTen(nearby_cities_result, parsed_url.query.wxsort, function(topTenText) {
                         response_callback(topTenText);
                     });
                 }
+
                 else{ // default to finding the highs if no weather property indicated
                     weather.topTen(nearby_cities_result, 'high', function(topTenText) {
                         response_callback(topTenText);

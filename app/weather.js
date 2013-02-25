@@ -111,7 +111,7 @@ function topTenText  (sorted_city_day_array, sort_property) { // get top ten pla
     });
     topTenhtml = '<html>\n' +
                                 '<body>\n' +
-                                    'Top Ten Nearby '  + S(sort_property).capitalize().s + 's:\n<br>' +
+                                    'Ten Warmest Nearby '  + S(sort_property).capitalize().s + 's:\n<br>' +
                                     '<ul>' +
                                     topTenTextOut.join('')+ '\n' +
                                     '</ul>\n' +
