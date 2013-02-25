@@ -1,4 +1,4 @@
-KayakChallenge v1.0.5
+KayakChallenge v1.1.5
 ==============
 
 App for a MindSumo contest to take in a location within the US and output the warmest 10 cities within 30 miles over the next 7 days along with the days those temperatures occurred on. Pretty simple, with kind of silly output, but lots of potential to expand and do cooler things.
@@ -9,4 +9,4 @@ You can interact with the app at http://kayakchallenge.herokuapp.com . It may ta
 
 Implemented with node.js because I wanted to learn it.
 
-Authored by jgoldbeck. Version 1.0.5 February 22, 2013
+Authored by jgoldbeck. Version 1.1.5 February 25, 2013
