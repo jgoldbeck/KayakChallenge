@@ -5,14 +5,14 @@ var fs = require("fs");
 
 var reply = function (request, response_callback) { //primary function which calls the various subfunctions in order
 
-    var parsed_url = url.parse(request.url, parseQueryString=true);
+    var parsed_url = url.parse(request.url, parseQueryString = true);
 
     if (parsed_url.query.dest) { // if destination is input, then find nearby highs and return results
 
         var location_options = {
             location: parsed_url.query.dest,
             radius: 30, // miles
-            num_cities: 20,
+            num_cities: 10,
             remove_duplicates: true
         };
 
@@ -20,9 +20,16 @@ var reply = function (request, response_callback) { //primary function which cal
             if (err){
             response_callback(nearby_cities_result);} // an error message
             else{
-                weather.topTenHighsText(nearby_cities_result, function(topTen) {
-                    response_callback(topTen);
-                });
+                if (parsed_url.query.wxsort){
+                    weather.topTen(nearby_cities_result, parsed_url.query.wxsort, function(topTenText) {
+                        response_callback(topTenText);
+                    });
+                }
+                else{ // default to finding the highs if no weather property indicated
+                    weather.topTen(nearby_cities_result, 'high', function(topTenText) {
+                        response_callback(topTenText);
+                    });
+                }
             }
         });
     }

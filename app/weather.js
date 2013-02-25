@@ -1,6 +1,7 @@
 var requestor = require('request');
 var _ = require('underscore');
 var async = require('async');
+var S = require('string');
 
 var wxbug_api_key = 'y62cjp5538tpjq5ymxe3z8wn';
 
@@ -9,10 +10,12 @@ var wxbug_api_key = 'y62cjp5538tpjq5ymxe3z8wn';
 //                                                                                                                    placeName: 'Cambridge', lat: 42.364688 }]
 // output: text indicating the top 10 highs over the next 7 days across the input cities
 //               an example of one line: 'Cambridge will have a high of 45 degrees on Tuesday,'
-var topTenHighsText = function (cities, callback) {
+var topTen = function (cities, weather_property, callback) {
     attachToCities(cities, function(weathered_cities) {
         cartesianWeatheredCities (weathered_cities, function(city_day_array){
-            callback (topTenText (sortCityDayArrayByHigh (city_day_array)));
+            sortCityDayArray (city_day_array, weather_property, function(sorted_city_day_array, sort_property){
+                callback( topTenText(sorted_city_day_array, sort_property) );
+            });
         });
     });
 };
@@ -78,7 +81,8 @@ function cartesianWeatheredCities (weathered_cities, callback) { // returns city
     callback(city_day_array);
 }
 
-function sortCityDayArrayByHigh (city_day_array) { // sort by high, descending
+function sortCityDayArray (city_day_array, sort_property, callback) { // sort descending by  sort_property (e.g. 'high' or 'low')
+console.log(sort_property);
     city_day_array.sort(function(city_day_a, city_day_b){
         if (!city_day_a && !city_day_b){ // if both are null
             return 0; // order not important
@@ -89,25 +93,26 @@ function sortCityDayArrayByHigh (city_day_array) { // sort by high, descending
         if (!city_day_b){ // if city_day_a is null
             return -1; // b should be at end
         }
-        if (city_day_a.high > city_day_b.high){
+        if (city_day_a[sort_property] > city_day_b[sort_property]){
             return -1;} // high temperatures should come early
-        if (city_day_a.high < city_day_b.high){
+        if (city_day_a[sort_property] < city_day_b[sort_property]){
             return 1;} // low temperatures should come later
         else{
             return 0;
         }
     });
-    return (city_day_array);
+    callback (city_day_array, sort_property);
 }
 
-function topTenText  (sorted_city_day_array) { // get top ten places and clean up the output
+function topTenText  (sorted_city_day_array, sort_property) { // get top ten places and clean up the output
     var topTen = sorted_city_day_array.slice(0,10);
     var topTenTextOut = topTen.map(function(city_day){
-        return '\n<li>' + city_day.placeName + ' will have a high of ' + city_day.high + ' degrees on ' + city_day.dayTitle + '</li>';
+        return '\n<li>' + city_day.placeName + ' will have a ' + sort_property + ' of ' + city_day[sort_property] + ' degrees on ' + city_day.dayTitle + '</li>';
     });
     topTenhtml = '<html>\n' +
                                 '<body>\n' +
-                                    'Top Ten Nearby Highs:\n<br><ul>' +
+                                    'Top Ten Nearby '  + S(sort_property).capitalize().s + 's:\n<br>' +
+                                    '<ul>' +
                                     topTenTextOut.join('')+ '\n' +
                                     '</ul>\n' +
                                 '</body>\n' +
@@ -117,4 +122,4 @@ function topTenText  (sorted_city_day_array) { // get top ten places and clean u
 
 
 
-exports.topTenHighsText  = topTenHighsText;
+exports.topTen  = topTen;
