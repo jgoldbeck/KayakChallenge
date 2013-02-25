@@ -12,7 +12,7 @@ var reply = function (request, response_callback) { //primary function which cal
         var location_options = {
             location: parsed_url.query.dest,
             radius: 30, // miles
-            num_cities: 10,
+            num_cities: 20,
             remove_duplicates: true
         };
 
