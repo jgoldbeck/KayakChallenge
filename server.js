@@ -16,7 +16,7 @@ function start() {
             console.log("Request for " + pathname + " received.");
 
             response.writeHead(200, {'Content-Type': 'text/html'});
-            response.write('<body>\n' + reply + '\n</body>');
+            response.write('<!doctype html>\n' + reply);
             response.end();
         });
     }

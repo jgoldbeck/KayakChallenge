@@ -1,16 +1,16 @@
 var url = require("url");
 var cities = require("./cities");
 var weather = require("./weather");
-var input = require("./views/input");
+var fs = require("fs");
 
 var reply = function (request, response_callback) { //primary function which calls the various subfunctions in order
 
-    var parsedUrl = url.parse(request.url, parseQueryString=true);
+    var parsed_url = url.parse(request.url, parseQueryString=true);
 
-    if (parsedUrl.query.dest) { // if destination is input, then find nearby highs and return results
+    if (parsed_url.query.dest) { // if destination is input, then find nearby highs and return results
 
         var location_options = {
-            location: parsedUrl.query.dest,
+            location: parsed_url.query.dest,
             radius: 30, // miles
             num_cities: 20,
             remove_duplicates: true
@@ -27,7 +27,9 @@ var reply = function (request, response_callback) { //primary function which cal
         });
     }
     else{ // display a form so user can enter destination
-        response_callback(input.formView());
+        fs.readFile('./app/views/input_form.html', function(err, input_form) {
+            response_callback(input_form);
+        });
     }
 };
 

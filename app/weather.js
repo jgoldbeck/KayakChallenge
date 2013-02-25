@@ -105,7 +105,14 @@ function topTenText  (sorted_city_day_array) { // get top ten places and clean u
     var topTenTextOut = topTen.map(function(city_day){
         return '\n<li>' + city_day.placeName + ' will have a high of ' + city_day.high + ' degrees on ' + city_day.dayTitle + '</li>';
     });
-    return ('Top Ten Nearby Highs:\n<br><ul>' + topTenTextOut.join('')+'</ul>');
+    topTenhtml = '<html>\n' +
+                                '<body>\n' +
+                                    'Top Ten Nearby Highs:\n<br><ul>' +
+                                    topTenTextOut.join('')+ '\n' +
+                                    '</ul>\n' +
+                                '</body>\n' +
+                            '</html>';
+    return (topTenhtml);
 }
 
 
