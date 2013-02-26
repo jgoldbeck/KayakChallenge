@@ -19,7 +19,7 @@ describe('nearby warm weather', function(){
     });
 
     var browser_options = {
-        url: 'http://localhost:' + port + '/test?dest=02139',
+        url: 'http://localhost:' + port + '/?dest=02139&wxbug=high',
         timeout: timeout
     };
 
@@ -29,7 +29,7 @@ describe('nearby warm weather', function(){
             expect(body).toMatch(/.* will have a .* of \d+ degrees on .*/);
             expect(body).not.toContain('undefined');
             expect(body).not.toContain('null');
-            var temps = (body.match(/(\d+)/g)).map(function(temp){return parseInt(temp,10);});
+            var temps = (body.match(/.* will have a .* of (\d+) degrees on .*/g)).map(function(temp){return parseInt(temp,10);});
             expect(temps).toBeSortedDescending();
             done();
         });
