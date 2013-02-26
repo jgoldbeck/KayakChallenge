@@ -57,10 +57,8 @@ function attachToCity  (city, callback) { // use wxbug to add weather to city ob
         else {
             if (jsonweather.forecastList) {  //if forecast list correctly assigned (as opposed to qps overload)
                 city.weather = jsonweather.forecastList;
-                  //console.log(city);
                 callback(city);}
             else { // if qps overload or similar, just do it again (and again) until we get a defined forecastList
-                //console.log('Had to retry for wxbug likely due to rate limit');
                 setTimeout(function() {attachToCity(city, callback);}, Math.random()*40+10);// wait 10-50 ms between requests, random to stagger requests from callbacks
             }
         }
@@ -82,7 +80,6 @@ function cartesianWeatheredCities (weathered_cities, callback) { // returns city
 }
 
 function sortCityDayArray (city_day_array, sort_property, callback) { // sort descending by  sort_property (e.g. 'high' or 'low')
-console.log(sort_property);
     city_day_array.sort(function(city_day_a, city_day_b){
         if (!city_day_a && !city_day_b){ // if both are null
             return 0; // order not important
@@ -111,7 +108,7 @@ function topTenText  (sorted_city_day_array, sort_property) { // get top ten pla
     });
     topTenhtml = '<html>\n' +
                                 '<body>\n' +
-                                    'Ten Warmest Nearby '  + S(sort_property).capitalize().s + 's:\n<br>' +
+                                    '<h3>Warmest '  + S(sort_property).capitalize().s + 's Near Your Destination This Week</h3>\n' +
                                     '<ul>' +
                                     topTenTextOut.join('')+ '\n' +
                                     '</ul>\n' +

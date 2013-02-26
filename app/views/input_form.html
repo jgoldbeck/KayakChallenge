@@ -1,9 +1,14 @@
 <html lang = "en">
     <body>
+        <h2> Find Warm Places Near Your Destination </h2>
         <form>
-            <input id="GET-dest" name="dest" type="text" placeholder="enter zip or city, state" required>
-            <input type="submit" name="wxsort" value="high">
-            <input type="submit" name="wxsort" value="low">
+             Enter destination: <input id="GET-dest" name="dest" type="text" placeholder="zip or city, state" required>
+             <br>
+             I care about the daily:
+            <input type="radio" name="wxsort" value="high" checked> highs
+            <input type="radio" name="wxsort" value="low"> lows
+            <br> <br>
+            <input type="submit" value="Find me nice weather">
         </form>
     </body>
 </html>
